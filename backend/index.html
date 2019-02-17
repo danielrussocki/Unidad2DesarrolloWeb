@@ -40,8 +40,8 @@
       "password":password
     };
     //$.(); Sintaxis de jQuery con Ajax
-    $.post("includes/_funciones.php", obj, function(){
-      
+    $.post('includes/_funciones.php', obj, function(e){
+      alert(e);
     });
     //Enviar a validar esos valores
     //En caso de ser válido, redireccionar a usuarios.php
