@@ -4,7 +4,9 @@ switch ($_POST["accion"]) {
 	case "login":
 		login();
 		break;
-	
+	case "consultar_usuarios":
+		consultar_usuarios();
+		break;
 	default:
 		# code...
 		break;
@@ -59,5 +61,17 @@ function imprimir($n){
 			# code...
 			break;
 	}
+}
+function consultar_usuarios(){
+	global $mysqli;
+	$query = "SELECT * FROM usuarios";
+	$resultado = mysqli_query($mysqli, $query);
+	$arreglo = [];
+	while($fila = mysqli_fetch_array($resultado)){
+		array_push($arreglo, $fila);
+	}
+	echo json_encode($arreglo);//Imprime el Json encodeado
+	//$result = $mysqli->query($query);
+	//print_r($fila);
 }
 ?>
