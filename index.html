@@ -89,8 +89,8 @@
                 <img alt="work_1" id="img_1" class="img-show">
                 <div class="overlay">
                     <div class="overlay-caption">
-                        <h5>PROJECT NAME</h5>
-                        <p>User Interface Design</p>
+                        <h5 id="trabajo_1" class="project-title">PROJECT NAME</h5>
+                        <p id="description_1">User Interface Design</p>
                     </div>
                 </div>
             </div>
@@ -98,8 +98,8 @@
                 <img alt="work_2" id="img_2" class="img-show">
                 <div class="overlay">
                     <div class="overlay-caption">
-                        <h5>PROJECT NAME</h5>
-                        <p>User Interface Design</p>
+                        <h5 id="trabajo_2" class="project-title">PROJECT NAME</h5>
+                        <p id="description_2">User Interface Design</p>
                     </div>
                 </div>
             </div>
@@ -107,8 +107,8 @@
                 <img alt="work_3" id="img_3" class="img-show">
                 <div class="overlay">
                     <div class="overlay-caption">
-                        <h5>PROJECT NAME</h5>
-                        <p>User Interface Design</p>
+                        <h5 id="trabajo_3" class="project-title">PROJECT NAME</h5>
+                        <p id="description_3">User Interface Design</p>
                     </div>
                 </div>
             </div>
@@ -116,8 +116,8 @@
                 <img alt="work_4" id="img_4" class="img-show">
                 <div class="overlay">
                     <div class="overlay-caption">
-                        <h5>PROJECT NAME</h5>
-                        <p>User Interface Design</p>
+                        <h5 id="trabajo_4" class="project-title">PROJECT NAME</h5>
+                        <p id="description_4">User Interface Design</p>
                     </div>
                 </div>
             </div>
@@ -129,8 +129,8 @@
                 <img alt="work_5" id="img_5" class="img-show">
                 <div class="overlay">
                     <div class="overlay-caption">
-                        <h5>PROJECT NAME</h5>
-                        <p>User Interface Design</p>
+                        <h5 id="trabajo_5" class="project-title">PROJECT NAME</h5>
+                        <p id="description_5">User Interface Design</p>
                     </div>
                 </div>
             </div>
@@ -138,8 +138,8 @@
                 <img alt="work_6" id="img_6" class="img-show">
                 <div class="overlay">
                     <div class="overlay-caption">
-                        <h5>PROJECT NAME</h5>
-                        <p>User Interface Design</p>
+                        <h5 id="trabajo_6" class="project-title">PROJECT NAME</h5>
+                        <p id="description_6">User Interface Design</p>
                     </div>
                 </div>
             </div>
@@ -147,8 +147,8 @@
                 <img alt="work_7" id="img_7" class="img-show">
                 <div class="overlay">
                     <div class="overlay-caption">
-                        <h5>PROJECT NAME</h5>
-                        <p>User Interface Design</p>
+                        <h5 id="trabajo_7" class="project-title">PROJECT NAME</h5>
+                        <p id="description_7">User Interface Design</p>
                     </div>
                 </div>
             </div>
@@ -156,8 +156,8 @@
                 <img alt="work_8" id="img_8" class="img-show">
                 <div class="overlay">
                     <div class="overlay-caption">
-                        <h5>PROJECT NAME</h5>
-                        <p>User Interface Design</p>
+                        <h5 id="trabajo_8" class="project-title">PROJECT NAME</h5>
+                        <p id="description_8">User Interface Design</p>
                     </div>
                 </div>
             </div>
@@ -272,6 +272,24 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 <script>
+    function consultar_works(){
+        obj = {
+            "accion":"consultar_works"
+        };
+        $.post("backend/includes/_funciones.php",obj,function(respuesta){
+            // let template = '';
+            let arr = [];
+            $.each(respuesta,function(i,e){
+                arr.push(e.works_title);
+            });
+
+        },"JSON");
+        let cont = 1;
+        $.each(arr,function(){
+            $("#trabajo_"+cont).text(arr);
+            cont++;
+        });
+    }
     $(document).ready(function(){
         let cont = 1;
         $(".img-show").each(function(){
@@ -281,6 +299,7 @@
         cont++;
         console.log(cont);
             });
+        consultar_works();
         });
 </script>
 </body>

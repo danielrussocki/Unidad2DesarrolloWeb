@@ -13,6 +13,12 @@ switch ($_POST["accion"]) {
 	case "insertar_works":
 		insertar_works();
 		break;
+	case "consultar_works":
+		consultar_works();
+		break;
+	case "eliminar_registro":
+		eliminar_usuarios($_POST['registro']);
+		break;
 	default:
 		# code...
 		break;
@@ -80,6 +86,26 @@ function consultar_usuarios(){
 	//$result = $mysqli->query($query);
 	//print_r($fila);
 }
+function eliminar_usuarios($id){
+	global $mysqli;
+	$query = "DELETE FROM usuarios WHERE id_usr = $id";
+	$resultado = mysqli_query($mysqli, $query);
+	if ($resultado) {
+		echo "Se eliminó correctamente";
+	} else {
+		echo "Se generó un error, intenta nuevamente";
+	}
+}
+function consultar_works(){
+	global $mysqli;
+	$query = "SELECT * FROM works LIMIT 8";
+	$resultado = mysqli_query($mysqli, $query);
+	$arreglo = [];
+	while ($fila = mysqli_fetch_array($resultado)) {
+		array_push($arreglo, $fila);
+	}
+	echo json_encode($arreglo);
+}
 function insertar_usuarios(){
 	$nombre = $_POST['nombre'];
 	$correo = $_POST['correo'];
@@ -92,9 +118,9 @@ function insertar_usuarios(){
 		if ($resultado->num_rows == 0) {
 			$query = "INSERT INTO usuarios VALUES('','$nombre','$correo','$telefono','$password','1')";
 			$data = $mysqli->query($query);
-			echo "Usuario agregado correctamente";
+			echo "1";
 		} else{
-			echo "correo ya existente";
+			echo "0";
 		}
 	}
 }
