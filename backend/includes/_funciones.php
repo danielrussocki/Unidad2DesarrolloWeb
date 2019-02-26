@@ -7,6 +7,12 @@ switch ($_POST["accion"]) {
 	case "consultar_usuarios":
 		consultar_usuarios();
 		break;
+	case "insertar_usuarios":
+		insertar_usuarios();
+		break;
+	case "insertar_works":
+		insertar_works();
+		break;
 	default:
 		# code...
 		break;
@@ -73,5 +79,57 @@ function consultar_usuarios(){
 	echo json_encode($arreglo);//Imprime el Json encodeado
 	//$result = $mysqli->query($query);
 	//print_r($fila);
+}
+function insertar_usuarios(){
+	$nombre = $_POST['nombre'];
+	$correo = $_POST['correo'];
+	$telefono = $_POST['telefono'];
+	$password = $_POST['password'];
+	global $mysqli;
+	if ($nombre!=''&&$correo!=''&&$telefono!=''&&$password!='') {
+		$verif = "SELECT * FROM usuarios WHERE correo_usr = '$correo'";
+		$resultado = $mysqli->query($verif);
+		if ($resultado->num_rows == 0) {
+			$query = "INSERT INTO usuarios VALUES('','$nombre','$correo','$telefono','$password','1')";
+			$data = $mysqli->query($query);
+			echo "Usuario agregado correctamente";
+		} else{
+			echo "correo ya existente";
+		}
+	}
+}
+function insertar_works(){
+	$work = $_POST['work'];
+	$description = $_POST['description'];
+	$image = utf8_encode($_POST['image']);
+	global $mysqli;
+	if ($work!=''&&$description!=''&&$image!='') {
+
+// if (is_uploaded_file($_FILES['image']['tmp_name'])) { 
+// //revisar que sea jpg 
+// if ($_FILES['image']['type'] == "image/jpeg" || $_FILES['image']['type'] == "image/pjpeg"){ 
+// //nuevo nombre para la image 
+// $nuevoNombre = time().".jpg"; 
+// //mover la image 
+// move_uploaded_file($_FILES['image']['tmp_name'], "../../img_productos/webcams/$nuevoNombre"); 
+// //obtener la inforamción 
+// $data = GetImageSize("../../img_productos/webcams/$nuevoNombre"); 
+
+// // Inserto el nombre dentro de la Base de datos 
+// /*=======================================*/ 
+// mysql_query("INSERT INTO tu_tabla (id, ruta) VALUES ('1',$nuevoNombre)  "); 
+// /*===============================================*/ 
+// //mensaje de éxito 
+// echo "<img src='../../img_productos/webcams/$nuevoNombre' $data[3]> <br> imagen $nuevoNombre subida con éxito"; 
+// }else{ 
+// echo "Formato no válido para fichero de imagen"; 
+// } 
+// } else { 
+// echo "Error al cargar imagen: " . $_FILES['image']['name']; 
+// } 
+
+		$query = "INSERT INTO works VALUES('','$image','$work','$description')";
+		$mysqli->query($query);
+	}
 }
 ?>

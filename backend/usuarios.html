@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -9,99 +8,20 @@
     <meta name="generator" content="Jekyll v3.8.5">
     <title>Dashboard Template · Bootstrap</title>
     <!-- Bootstrap core CSS -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <!-- Custom styles for this template -->
     <link href="css/estilos.css" rel="stylesheet">
   </head>
   <body>
-    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-  <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Company name</a>
-  <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
-  <ul class="navbar-nav px-3">
-    <li class="nav-item text-nowrap">
-      <a class="nav-link" href="#">Sign out</a>
-    </li>
-  </ul>
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow" id="navh">
+  
 </nav>
 
 <div class="container-fluid">
   <div class="row">
-    <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-      <div class="sidebar-sticky">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link active" href="#">
-              <span data-feather="home"></span>
-              Dashboard <span class="sr-only">(current)</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file"></span>
-              Orders
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="shopping-cart"></span>
-              Products
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="users"></span>
-              Customers
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="bar-chart-2"></span>
-              Reports
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="layers"></span>
-              Integrations
-            </a>
-          </li>
-        </ul>
+    <nav class="col-md-2 d-none d-md-block bg-light sidebar" id="navv">
 
-        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-          <span>Saved reports</span>
-          <a class="d-flex align-items-center text-muted" href="#">
-            <span data-feather="plus-circle"></span>
-          </a>
-        </h6>
-        <ul class="nav flex-column mb-2">
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              Current month
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              Last quarter
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              Social engagement
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              Year-end sale
-            </a>
-          </li>
-        </ul>
-      </div>
     </nav>
-
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" id="main">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Dashboard</h1>
@@ -129,7 +49,7 @@
         </table>
       </div>
       <div id="insert_data" class="view">
-        <form action="#" id="form_data">
+        <form id="form_data" method="post">
             <div class="row">
               <div class="col">
           <div class="form-group">
@@ -187,7 +107,7 @@
   function consultar(){
     let obj = {
       "accion":"consultar_usuarios"
-    }
+    };
   $.post("includes/_funciones.php",obj,function(respuesta){
     let template = '';
     $.each(respuesta, function(i,e){
@@ -205,17 +125,13 @@
     $("#list-usuarios tbody").html(template);
     },"JSON");
   }
-  $(document).ready(function(){
-    consultar();
-    change_view();
-  });
   $('#nuevo_registro').click(function(){
     change_view('insert_data');
   });
   $('#guardar_datos').click(function(){
     let obj = {
-      "accion": "insertar_usuarios"
-    }
+      "accion":"insertar_usuarios"
+    };
     $('#form_data').find("input").each(function(){
       $(this).removeClass('is-invalid');
       if ($(this).val() != '') {
@@ -226,12 +142,20 @@
       }
     });
     $.post("includes/_funciones.php",obj,function(){
-      
     });
   });
   $('#main').find('.cancelar').click(function(){
     change_view();
     $('#form_data')[0].reset();
+  });
+  $(".nav-item").find("#works_link").click(function(){
+    $("#main").html("");
+  });
+    $(document).ready(function(){
+    $("#navv").load("./sidebar.html");
+    $("#navh").load("./navbar.html");
+    consultar();
+    change_view();
   });
 </script>
 </body>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Works</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- Custom styles for this template -->
+    <link href="css/estilos.css" rel="stylesheet">
+</head>
+<body>
+	    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow" id="navh"></nav>
+	<div class="container-fluid view">
+		<nav class="col-md-2 d-none d-md-block bg-light sidebar" id="navv"></nav>
+		<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 mt-4" id="main">
+		<form id="form_works" method="post" enctype="application/x-www-form-urlencoded">
+            <div class="row">
+            	<div class="col">
+		        	<div class="form-group">
+		            	<label for="work">Trabajo: </label>
+		            	<input type="text" id="work" name="work" class="form-control">
+		        	</div>
+		        </div>
+		        <div class="col">
+		        	<div class="form-group">
+		            <label for="description">Descripción: </label>
+		        	<input type="text" id="description" name="description" class="form-control">
+		        	</div>
+            	</div>
+            </div>
+            <div class="row">
+            	<div class="col">
+	            		<div class="form-group">
+	            			<div class="custom-file">
+							<input type="file" class="custom-file-input" name="image" id="image">
+							<label class="custom-file-label" for="image">Adjuntar archivo</label>
+						</div>
+            		</div>
+            	</div>
+            </div>
+            <div class="messages"></div>
+            <div class="img-thumbnail"></div>
+            <div class="row">
+              <div class="col">
+                <button class="btn btn-success" type="button" id="enviar">
+                  Guardar
+                </button>
+              </div>
+            </div>
+        </form>
+    </main>
+	</div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+		let fileExtension = "";
+		$(".messages").hide();
+		$(':file').change(function(){
+        //obtenemos un array con los datos del archivo
+        var file = $("#image")[0].files[0];
+        //obtenemos el nombre del archivo
+        var fileName = file.name;
+        //obtenemos la extensión del archivo
+        fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
+        //obtenemos el tamaño del archivo
+        var fileSize = file.size;
+        //obtenemos el tipo de archivo image/png ejemplo
+        var fileType = file.type;
+        //mensaje con la información del archivo
+        showMessage("<span class='info'>Archivo para subir: "+fileName+", peso total: "+fileSize+" bytes.</span>");
+    });
+		$("#enviar").click(function(){
+			let work = $("#work").val();
+			let description = $("#description").val();
+			let image = $("#image").val();
+			if (work!=''&&description!=''&&image!='') {
+				let nombreArchivo = $("#image")[0].files[0];
+				image = nombreArchivo.name;
+				let formData = new FormData($("#form_works")[0]);
+				let message = "";
+				let ruta = "files\/"+image;
+				console.log(ruta);
+				let obj = {
+		    	"accion":"insertar_works",
+		    	"work":work,
+		    	"description":description,
+		    	"image":ruta
+		    };
+			$.ajax({
+				url:"includes/info.php",
+				type:"POST",
+				data: formData,
+				cache: false,
+				contentType: false,
+				processData: false,
+				beforeSend: function(){
+					message = $("<span>Subiendo la imagen, por favor espere...</span>");
+					showMessage(message);
+				},
+				success: function(data){
+					message = $("<span>La imagen ha subido correctamente.</span>");
+					showMessage(message);
+					if (isImage(fileExtension)) {
+						$(".img-thumbnail").html("\<img src=\"files\/"+data+"\"\/\>");
+					} else {
+						message = $("<span>Formato de archivo no admitido.</span>");
+						showMessage(message);
+					}
+				},
+				error: function(){
+					message = $("<span>Ha ocurrido un error.</span>");
+                	showMessage(message);
+				}
+			});
+				$.each(obj,function(i,e){
+		    	console.log(i,e);
+		    });
+		    	$.post("includes/_funciones.php",obj,function(){
+		    	});
+			} else {
+				$('#form_works').find("input").each(function(){
+		      $(this).removeClass('is-invalid');
+		      if ($(this).val() == '') {
+		      	$(this).addClass('is-invalid').focus();
+		      	}
+	    	});
+			}
+		});
+		function showMessage(message){
+			    $(".messages").html("").show();
+			    $(".messages").html(message);
+			}
+			function isImage(extension){
+			    switch(extension.toLowerCase()) 
+			    {
+			        case 'jpg':case 'png': case 'jpeg':
+			            return true;
+			        break;
+			        default:
+			            return false;
+			        break;
+			    }
+			}
+		$(document).ready(function(){
+		$("#navv").load("./sidebar.html");
+    	$("#navh").load("./navbar.html");
+		});
+</script>
+</body>
+</html>
