@@ -116,7 +116,7 @@ function insertar_usuarios(){
 		$verif = "SELECT * FROM usuarios WHERE correo_usr = '$correo'";
 		$resultado = $mysqli->query($verif);
 		if ($resultado->num_rows == 0) {
-			$query = "INSERT INTO usuarios VALUES('','$nombre','$correo','$telefono','$password','1')";
+			$query = "INSERT INTO usuarios VALUES('','$nombre','$correo','$password','$telefono','1')";
 			$data = $mysqli->query($query);
 			echo "1";
 		} else{
