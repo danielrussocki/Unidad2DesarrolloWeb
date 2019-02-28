@@ -16,8 +16,14 @@ switch ($_POST["accion"]) {
 	case "consultar_works":
 		consultar_works();
 		break;
+	case 'editar_usuario':
+		editar_usuario();
+		break;
 	case "eliminar_registro":
 		eliminar_usuarios($_POST['registro']);
+		break;
+	case "editar_registro":
+		consultar_registro($_POST['registro']);
 		break;
 	default:
 		# code...
@@ -75,6 +81,7 @@ function imprimir($n){
 	}
 }
 function consultar_usuarios(){
+	// extract($_POST); **PARA EXTRAER POST AUTOMÁTICAMENTE
 	global $mysqli;
 	$query = "SELECT * FROM usuarios";
 	$resultado = mysqli_query($mysqli, $query);
@@ -86,6 +93,17 @@ function consultar_usuarios(){
 	//$result = $mysqli->query($query);
 	//print_r($fila);
 }
+function editar_usuario(){
+	global $mysqli;
+	extract($_POST);
+	$query = "UPDATE usuarios SET nombre_usr = '$nombre', correo_usr = '$correo', telefono_usr = '$telefono', pswd_usr = '$password' WHERE id_usr = $id";
+	$resultado = mysqli_query($mysqli,$query);
+	if ($resultado) {
+		echo "Editado correctamente";
+	} else {
+		echo "error";
+	}
+}
 function eliminar_usuarios($id){
 	global $mysqli;
 	$query = "DELETE FROM usuarios WHERE id_usr = $id";
@@ -95,6 +113,13 @@ function eliminar_usuarios($id){
 	} else {
 		echo "Se generó un error, intenta nuevamente";
 	}
+}
+function consultar_registro($id){
+	global $mysqli;
+	$query_c = "SELECT * FROM usuarios WHERE id_usr = $id LIMIT 1";
+	$resultado = mysqli_query($mysqli,$query_c);
+	$fila = mysqli_fetch_array($resultado);
+	echo json_encode($fila);
 }
 function consultar_works(){
 	global $mysqli;

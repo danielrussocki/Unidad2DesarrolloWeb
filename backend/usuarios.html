@@ -49,7 +49,7 @@
         </table>
       </div>
       <div id="insert_data" class="view">
-        <form id="form_data" method="post">
+        <form id="form_data" method="post" enctype="multipart/form-data">
             <div class="row">
               <div class="col">
           <div class="form-group">
@@ -60,6 +60,12 @@
             <label for="correo">Correo: </label>
           <input type="email" id="correo" name="correo" class="form-control">
           </div>
+          <!-- <div class="col">
+            <div class="form-group">
+            <input type="file" id="file" name="file" class="custom-file-input">
+            <label class="custom-file-label" for="file">Adjuntar archivo</label>
+            </div>
+          </div> -->
               </div>
               <div class="col">
           <div class="form-group">
@@ -148,6 +154,10 @@
         return false;
       }
     });
+    if ($(this).data('editar') == 1) {
+      obj["accion"] = "editar_registro";
+      $(this).text("Guardar").removeData("editar").removeData("registro");
+    }
     $.post("includes/_funciones.php",obj,function(d){
         if (d=="1") {
           change_view();
@@ -173,6 +183,29 @@
         }else{
           alert("El registro no se ha eliminado");
         }
+      });
+      $('#list_usuarios').on("click",".editar_registro",function(e){
+        e.preventDefault();
+        $('#form_data')[0].reset();
+        change_view('insert_data');
+        let id = $(this).data('id');
+        $("#guardar_datos").text("Editar").data("editar",1).data("registro",id);
+        console.log(id);
+        obj = {
+          "accion":"editar_registro",
+          "registro":id,
+          // "nombre":nombre,
+          // "correo":correo,
+          // "telefono":telefono,
+          // "password":password
+        };
+        $.post("includes/_funciones.php",obj,function(r){
+          console.log(r);
+          $('#nombre').val(r.nombre_usr);
+          $('#correo').val(r.correo_usr);
+          $('#telefono').val(r.telefono_usr);
+          $('#password').val(r.pswd_usr);
+        },"JSON");
       });
   $('#main').find('.cancelar').click(function(){
     change_view();
