@@ -41,7 +41,11 @@
     };
     //$.(); Sintaxis de jQuery con Ajax
     $.post('includes/_funciones.php', obj, function(e){
-      alert(e);
+      if (e=="Acceso permitido - 1") {
+        window.location.href = "usuarios.php";
+      } else {
+        alert(e);
+      }
     });
     //Enviar a validar esos valores
     //En caso de ser válido, redireccionar a usuarios.php

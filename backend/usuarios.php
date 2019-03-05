@@ -1,3 +1,8 @@
+<?php
+session_start();
+error_reporting(0);
+if (isset($_SESSION['access'])) {
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -155,7 +160,10 @@
       }
     });
     if ($(this).data('editar') == 1) {
+      console.log(obj);
       obj["accion"] = "editar_registro";
+      obj["registro"] = $(this).data("registro");
+      console.log(obj);
       $(this).text("Guardar").removeData("editar").removeData("registro");
     }
     $.post("includes/_funciones.php",obj,function(d){
@@ -192,14 +200,15 @@
         $("#guardar_datos").text("Editar").data("editar",1).data("registro",id);
         console.log(id);
         obj = {
-          "accion":"editar_registro",
-          "registro":id,
+          "accion":"consultar_registro",
+          "registro":id
           // "nombre":nombre,
           // "correo":correo,
           // "telefono":telefono,
           // "password":password
         };
         $.post("includes/_funciones.php",obj,function(r){
+          console.log(obj);
           console.log(r);
           $('#nombre').val(r.nombre_usr);
           $('#correo').val(r.correo_usr);
@@ -214,6 +223,19 @@
   $(".nav-item").find("#works_link").click(function(){
     $("#main").html("");
   });
+  $("#navh").on("click","#signout",function(){
+    let obj = {
+      "accion":"session_kill"
+    }
+    $.post("includes/_funciones.php",obj,function(xd){
+      window.location.href = xd;
+    });
+  });
 </script>
 </body>
 </html>
+<?php
+} else {
+  header("location:index.html");
+}
+?>

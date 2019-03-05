@@ -16,25 +16,36 @@ switch ($_POST["accion"]) {
 	case "consultar_works":
 		consultar_works();
 		break;
-	case 'editar_usuario':
+	case 'editar_registro':
 		editar_usuario();
 		break;
 	case "eliminar_registro":
 		eliminar_usuarios($_POST['registro']);
 		break;
-	case "editar_registro":
+	case "consultar_registro":
 		consultar_registro($_POST['registro']);
+		break;
+	case "session_kill":
+		kill();
 		break;
 	default:
 		# code...
 		break;
+}
+function kill(){
+	session_start();
+	error_reporting(0);
+	session_destroy();
+	echo "index.html";
 }
 function login(){
 	//echo "Tu usuario es: ".$_POST["usuario"]." y tu password es: ".$_POST["password"];
 	//Conectar con la base de datos
 	global $mysqli;
 	$usu = $_POST["usuario"];
+	$usu = mysqli_real_escape_string($mysqli,$usu);
 	$pass = $_POST["password"];
+	$pass = mysqli_real_escape_string($mysqli,$pass);
 	$num = 0;
 	//Si usuario y contraseña están vacíos que imprima 3
 	if ($usu==''||$pass=='') {
@@ -49,6 +60,9 @@ function login(){
 			$result2 = $mysqli->query($query2);
 			if ($result2->num_rows > 0) {
 				$num = 1;
+				session_start();
+				error_reporting(0);
+				$_SESSION['access'] = $usu;
 			} elseif ($result2->num_rows == 0) {
 				$num = 0;
 			}
@@ -96,10 +110,10 @@ function consultar_usuarios(){
 function editar_usuario(){
 	global $mysqli;
 	extract($_POST);
-	$query = "UPDATE usuarios SET nombre_usr = '$nombre', correo_usr = '$correo', telefono_usr = '$telefono', pswd_usr = '$password' WHERE id_usr = $id";
+	$query = "UPDATE usuarios SET nombre_usr = '$nombre', correo_usr = '$correo', telefono_usr = '$telefono', pswd_usr = '$password' WHERE id_usr = $registro";
 	$resultado = mysqli_query($mysqli,$query);
 	if ($resultado) {
-		echo "Editado correctamente";
+		echo "1";
 	} else {
 		echo "error";
 	}
