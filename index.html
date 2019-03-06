@@ -82,87 +82,9 @@
     </section>
 
     <!-- Parte de las 8 imagenes -->
-
-    <div class="container-fluid">
-        <div class="row work">
-            <div class="col-3 m-0 p-0 box">
-                <img alt="work_1" id="img_1" class="img-show">
-                <div class="overlay">
-                    <div class="overlay-caption">
-                        <h5 id="trabajo_1" class="project-title">PROJECT NAME</h5>
-                        <p id="description_1">User Interface Design</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-3 m-0 p-0 box">
-                <img alt="work_2" id="img_2" class="img-show">
-                <div class="overlay">
-                    <div class="overlay-caption">
-                        <h5 id="trabajo_2" class="project-title">PROJECT NAME</h5>
-                        <p id="description_2">User Interface Design</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-3 m-0 p-0 box">
-                <img alt="work_3" id="img_3" class="img-show">
-                <div class="overlay">
-                    <div class="overlay-caption">
-                        <h5 id="trabajo_3" class="project-title">PROJECT NAME</h5>
-                        <p id="description_3">User Interface Design</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-3 m-0 p-0 box">
-                <img alt="work_4" id="img_4" class="img-show">
-                <div class="overlay">
-                    <div class="overlay-caption">
-                        <h5 id="trabajo_4" class="project-title">PROJECT NAME</h5>
-                        <p id="description_4">User Interface Design</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container-fluid">
-        <div class="row work">
-            <div class="col-3 m-0 p-0 box">
-                <img alt="work_5" id="img_5" class="img-show">
-                <div class="overlay">
-                    <div class="overlay-caption">
-                        <h5 id="trabajo_5" class="project-title">PROJECT NAME</h5>
-                        <p id="description_5">User Interface Design</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-3 m-0 p-0 box">
-                <img alt="work_6" id="img_6" class="img-show">
-                <div class="overlay">
-                    <div class="overlay-caption">
-                        <h5 id="trabajo_6" class="project-title">PROJECT NAME</h5>
-                        <p id="description_6">User Interface Design</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-3 m-0 p-0 box">
-                <img alt="work_7" id="img_7" class="img-show">
-                <div class="overlay">
-                    <div class="overlay-caption">
-                        <h5 id="trabajo_7" class="project-title">PROJECT NAME</h5>
-                        <p id="description_7">User Interface Design</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-3 m-0 p-0 box">
-                <img alt="work_8" id="img_8" class="img-show">
-                <div class="overlay">
-                    <div class="overlay-caption">
-                        <h5 id="trabajo_8" class="project-title">PROJECT NAME</h5>
-                        <p id="description_8">User Interface Design</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <section class="works_images m-0 p-0">
+    
+    </section>
     <div class="container-fluid py-5 my-5">
         <div class="row justify-content-sm-center">
             <div class="col p-0 text-center">
@@ -268,38 +190,48 @@
             </div>
         </div>
     </footer>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script>
-    function consultar_works(){
-        obj = {
+    function obtenerDatos(){
+        let obj = {
             "accion":"consultar_works"
         };
-        $.post("backend/includes/_funciones.php",obj,function(respuesta){
-            // let template = '';
-            let arr = [];
-            $.each(respuesta,function(i,e){
-                arr.push(e.works_title);
+        $.post("backend/includes/_funciones.php",obj,function(resp){
+            let template = '';
+            $.each(resp,function(i,e){
+                console.log(i,e);
+                if (i==0||i==4||i==8) {
+                    template+=`
+                    <div class="container-fluid p-0 m-0">
+                        <div class="row work p-0 m-0">
+                    `;
+                }
+                template += `
+                <div class="col-3 m-0 p-0 box">
+                    <img alt="" src="${e.works_file}">
+                    <div class="overlay">
+                        <div class="overlay-caption">
+                        <h5 class="project-title">${e.works_title}</h5>
+                        <p>${e.works_subtitle}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            if (i==3||i==7||i==11) {
+                template += `
+                    </div>
+                </div>
+                `;
+                }
             });
-
+            console.log(template);
+            $(".works_images").html(template);
         },"JSON");
-        let cont = 1;
-        $.each(arr,function(){
-            $("#trabajo_"+cont).text(arr);
-            cont++;
-        });
     }
     $(document).ready(function(){
-        let cont = 1;
-        $(".img-show").each(function(){
-        $("#img_"+cont).attr({
-            "src":"backend/files/work_"+cont+".png"
-        });
-        cont++;
-        console.log(cont);
-            });
-        consultar_works();
+            obtenerDatos();
         });
 </script>
 </body>
