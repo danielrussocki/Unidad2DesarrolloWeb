@@ -17,20 +17,42 @@ switch ($_POST["accion"]) {
 		consultar_works();
 		break;
 	case 'editar_registro':
-		editar_usuario();
+		editar_registro($_POST["registro"],$_POST["tabla"]);
 		break;
 	case "eliminar_registro":
-		eliminar_usuarios($_POST['registro']);
+		eliminar_registro($_POST["registro"],$_POST["tabla"]);
 		break;
 	case "consultar_registro":
-		consultar_registro($_POST['registro']);
+		consultar_registro($_POST["registro"],$_POST["tabla"]);
 		break;
 	case "session_kill":
 		kill();
 		break;
+	case "carga_foto":
+		carga_foto($_POST["carpeta"]);
+		break;
 	default:
 		# code...
 		break;
+}
+function carga_foto($carpeta){
+	if (isset($_FILES["foto"])) {
+		$file = $_FILES["foto"];
+		$nombre = $_FILES["foto"]["name"];
+		$temporal = $_FILES["foto"]["tmp_name"];
+		$tipo = $_FILES["foto"]["type"];
+		$tam = $_FILES["foto"]["size"];
+		$ruta = "../../img/".$carpeta."/";
+		$respuesta = [
+			"archivo" => "../img/".$carpeta."/logotipo.png",
+			"status" => 0
+		];
+		if (move_uploaded_file($_FILES["foto"]["tmp_name"],$ruta.$nombre)) {
+				$respuesta["archivo"] = "../img/".$carpeta."/".$nombre;
+				$respuesta["status"] = 1;
+			}
+		echo json_encode($respuesta);
+	}
 }
 function kill(){
 	session_start();
@@ -107,10 +129,24 @@ function consultar_usuarios(){
 	//$result = $mysqli->query($query);
 	//print_r($fila);
 }
-function editar_usuario(){
+function editar_registro($id,$tabla){
 	global $mysqli;
 	extract($_POST);
-	$query = "UPDATE usuarios SET nombre_usr = '$nombre', correo_usr = '$correo', telefono_usr = '$telefono', pswd_usr = '$password' WHERE id_usr = $registro";
+	switch ($tabla) {
+		case 'usuarios':
+			$query = "UPDATE usuarios SET nombre_usr = '$nombre', correo_usr = '$correo', telefono_usr = '$telefono', pswd_usr = '$password' WHERE id_usr = $id";
+			break;
+		case 'works':
+			$foto = $_POST['foto'];
+			$ruta = "img/works/";
+			$info = pathinfo($foto);
+			$nombre_archivo = $ruta.$info['basename'];
+			$query = "UPDATE works SET works_file = '$nombre_archivo', works_title = '$work', works_subtitle = '$description' WHERE works_id = $id";
+			break;
+		default:
+			echo "error";
+			break;
+	}
 	$resultado = mysqli_query($mysqli,$query);
 	if ($resultado) {
 		echo "1";
@@ -118,9 +154,19 @@ function editar_usuario(){
 		echo "error";
 	}
 }
-function eliminar_usuarios($id){
+function eliminar_registro($id,$tabla){
 	global $mysqli;
-	$query = "DELETE FROM usuarios WHERE id_usr = $id";
+	switch ($tabla) {
+		case 'usuarios':
+			$query = "DELETE FROM usuarios WHERE id_usr = $id";
+			break;
+		case 'works':
+			$query = "DELETE FROM works WHERE works_id = $id";
+			break;
+		default:
+			echo "error";
+			break;
+	}
 	$resultado = mysqli_query($mysqli, $query);
 	if ($resultado) {
 		echo "Se eliminó correctamente";
@@ -128,16 +174,26 @@ function eliminar_usuarios($id){
 		echo "Se generó un error, intenta nuevamente";
 	}
 }
-function consultar_registro($id){
+function consultar_registro($id,$tabla){
 	global $mysqli;
-	$query_c = "SELECT * FROM usuarios WHERE id_usr = $id LIMIT 1";
+	switch ($tabla) {
+		case 'usuarios':
+			$query_c = "SELECT * FROM usuarios WHERE id_usr = $id LIMIT 1";
+			break;
+		case 'works':
+			$query_c = "SELECT * FROM works WHERE works_id = $id LIMIT 1";
+			break;
+		default:
+			echo "error";
+			break;
+	}
 	$resultado = mysqli_query($mysqli,$query_c);
 	$fila = mysqli_fetch_array($resultado);
 	echo json_encode($fila);
 }
 function consultar_works(){
 	global $mysqli;
-	$query = "SELECT * FROM works LIMIT 8";
+	$query = "SELECT * FROM works";
 	$resultado = mysqli_query($mysqli, $query);
 	$arreglo = [];
 	while ($fila = mysqli_fetch_array($resultado)) {
@@ -166,35 +222,17 @@ function insertar_usuarios(){
 function insertar_works(){
 	$work = $_POST['work'];
 	$description = $_POST['description'];
-	$image = utf8_encode($_POST['image']);
+	$foto = $_POST['foto'];
+	$ruta = "img/works/";
+	$info = pathinfo($foto);
+	$nombre_archivo = $ruta.$info['basename'];
 	global $mysqli;
-	if ($work!=''&&$description!=''&&$image!='') {
-
-// if (is_uploaded_file($_FILES['image']['tmp_name'])) { 
-// //revisar que sea jpg 
-// if ($_FILES['image']['type'] == "image/jpeg" || $_FILES['image']['type'] == "image/pjpeg"){ 
-// //nuevo nombre para la image 
-// $nuevoNombre = time().".jpg"; 
-// //mover la image 
-// move_uploaded_file($_FILES['image']['tmp_name'], "../../img_productos/webcams/$nuevoNombre"); 
-// //obtener la inforamción 
-// $data = GetImageSize("../../img_productos/webcams/$nuevoNombre"); 
-
-// // Inserto el nombre dentro de la Base de datos 
-// /*=======================================*/ 
-// mysql_query("INSERT INTO tu_tabla (id, ruta) VALUES ('1',$nuevoNombre)  "); 
-// /*===============================================*/ 
-// //mensaje de éxito 
-// echo "<img src='../../img_productos/webcams/$nuevoNombre' $data[3]> <br> imagen $nuevoNombre subida con éxito"; 
-// }else{ 
-// echo "Formato no válido para fichero de imagen"; 
-// } 
-// } else { 
-// echo "Error al cargar imagen: " . $_FILES['image']['name']; 
-// } 
-
-		$query = "INSERT INTO works VALUES('','$image','$work','$description')";
+	if ($work!=''&&$description!=''&&$foto!='') {
+		$query = "INSERT INTO works VALUES('','$nombre_archivo','$work','$description')";
 		$mysqli->query($query);
+		echo "1";
+	} else {
+		echo "0";
 	}
 }
 ?>
