@@ -1,3 +1,15 @@
+/*@media (min-width: 320px) and (max-width: 767px) {
+  #logotipo{
+    display: block;
+    margin: 15px auto;
+  }
+  #button-movil{
+    color: #fff;
+  }
+  .nav{
+    flex-direction: column;
+  }
+}*/
 body{
   font-family: 'Raleway', sans-serif;
   font-weight: bold;

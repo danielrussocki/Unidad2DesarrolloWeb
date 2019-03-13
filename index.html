@@ -201,7 +201,7 @@
         $.post("backend/includes/_funciones.php",obj,function(resp){
             let template = '';
             $.each(resp,function(i,e){
-                console.log(i,e);
+                // console.log(i,e);
                 if (i==0||i==4||i==8) {
                     template+=`
                     <div class="container-fluid p-0 m-0">
@@ -226,7 +226,7 @@
                 `;
                 }
             });
-            console.log(template);
+            // console.log(template);
             $(".works_images").html(template);
         },"JSON");
     }
